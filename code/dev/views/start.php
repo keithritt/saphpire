@@ -1,7 +1,4 @@
 <?
-//if(in_array(ENV, array('dev', 'beta') && $)
-// this should arguable be in a different location
-
 
 $sHtml = '';
 if(!Session::get('bAllowView'))
@@ -20,7 +17,6 @@ if(isset($sDocType))
 
 $sHtml.= '<html lang="en">
 <head>';
-
 
 // checking the 'Trident' is the only way to detect the browser vesion regardless of the compatability mode setting
 // 4.0 = IE8;  5.0 = IE9; 6.0 = IE10; 7.0 = IE11; IE7 has no Trident value
@@ -41,8 +37,7 @@ elseif(strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0'))
 $sHtml.= '<meta charset="utf-8" />';
 $sHtml.= '<meta name="viewport" content="width=device-width, initial-scale=1" />';
 
-
-  // twitter boostrap recommends <!DOCTYPE html> - but that breaks oldtowndrafthouse.com
+  // twitter boostrap recommends <!DOCTYPE html>
   // this should disable zooming on mobile phones
   //<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	if(isset($this->sFavIcon))
@@ -51,14 +46,11 @@ $sHtml.= '<meta name="viewport" content="width=device-width, initial-scale=1" />
 	if(isset($this->sTitle))
 		$sHtml.= '<title>'.$this->sTitle.'</title>';
 
-  //expose($aCss);
-
 	if(isset(Controller::$aCss['head_start']))
   {
     foreach((array)Controller::$aCss['head_start'] as $sCss)
   		$sHtml.= '<link href="'.$sCss.'" type="text/css" rel="stylesheet" media="all" />'."\n";
   }
-
 
 	$sHtml.= "<script>
   window.onerror=function(sMsg, sUrl, iLine)
@@ -82,7 +74,5 @@ $sHtml.= '
 
 </head>
 <body>';
-
-
 
 return $sHtml;

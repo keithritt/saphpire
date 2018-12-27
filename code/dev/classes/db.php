@@ -3,7 +3,6 @@
 class Db
 {
   public static $oMaster = null;
-  public static $oBarmend = null;
   public static $iErrorCount = 0;
 
   public static function __callStatic($sFunction, $aArgs)
@@ -216,12 +215,13 @@ class Db
     if($fTotalTime > $iThreshold)
     {
       // record error
+      Log::_error($sErrorClean, Log::PRIORITY_CRITICAL, Log::TYPE_SQL_SLOWNESS, $sSqlClean, $sFile, $iLine);
     }
-    //line();
+
     if($bRecordStat)
     {
-      //$sMd5 = _md5($sSql);
-      //record_stat($fTotalTime, 'query_exec', $sMd5, DOMAIN);
+      $sMd5 = _md5($sSql);
+      record_stat($fTotalTime, 'query_exec', $sMd5, DOMAIN);
     }
 
     return $vRet;
@@ -302,7 +302,6 @@ class Db
         switch(Auth::$sAccess)
         {
           case 'apache':
-            //line();
             return Auth::decrypt('/3ZnkOnfddpM7CMcIuj79M1Js4cKD889lBc253sFrJY=');
         }
       case 'beta':
@@ -321,19 +320,14 @@ class Db
               case 'select_row':
               case 'select_rows':
               case 'select_rows_and_count':
-                //line();
                 return Auth::decrypt('jOcaVn6HkNXMuCbwmlG2aBFLMCPKgofkhAy0BdoyuWw=');
               case 'insert':
-              //line();
                 return Auth::decrypt('5XG9UK08SoanP3Ypc+dgvCslHsK34uj+TPX0JLqGidc=');
               case 'update':
-              //line();
                 return Auth::decrypt('yGQN0aaRpcSxm11gG1NBenmJaswyPK18XOXEWkyoMNg=');
               case 'delete':
-              //line();
                 return Auth::decrypt('mRSPcihHEiiS/VPkPJbUKz0RChLzK5XP8P+1xEkTxBQ=');
               case 'admin':
-              //line();
                 return Auth::decrypt('gLd2mE3rOyatAdEaUcdBYaYYWpzDqP2BalZuRvfDRHY=');
             }
         }

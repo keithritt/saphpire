@@ -1,5 +1,0 @@
-<?php
-
-/**
- * Define constants here
- */

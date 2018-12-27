@@ -2,9 +2,7 @@
 
 //@TODO - possibly move these definitions to classes
 define('START_TIME', microtime(true));
-//var_dump(getcwd());
-//die();
-//define('CODE_PATH', 'code/'.CODE_ENV);
+
 if(!defined('SAPHPIRE_PATH'))
   define('SAPHPIRE_PATH', getcwd());
 define('CODE_PATH', SAPHPIRE_PATH.'/code/'.CODE_ENV);
@@ -21,7 +19,6 @@ define('TIME_FORMAT_SHORT', 'g:i a');
 
 if(isset($_SERVER['SERVER_NAME']))
 {
-  //print "\n hit line ".__line__;
   $aTmp = explode('.', strtolower($_SERVER['SERVER_NAME']));
   switch(count($aTmp))
   {
@@ -41,11 +38,7 @@ if(isset($_SERVER['SERVER_NAME']))
 }
 else
 {
-  //print "\n hit line ".__line__;
   define('URL_PREFIX', ENV.'.');
-  //print "\n hit line ".__line__;
-  define('DOMAIN', 'keithritt.net');
-  //print "\n hit line ".__line__;
   define('DOMAIN_ID', 0);
 }
 
@@ -64,54 +57,16 @@ function coalesce()
   Log::deprecated_code('coalesce()');
 }
 
-print "<br>hit line : ".__line__;
-//die();
-
-// tmp
-//ini_set('memory_limit', '20M');
-
-//print "<br>hit line : ".__line__;
-//die();
-
-//var_dump(CODE_PATH);
-
-
 //@TODO - move autoloading to controllers
 require_once(CODE_PATH.'/classes/session.php');
-
-print "<br>hit line : ".__line__;
-//die();
-
-
 require_once(CODE_PATH.'/classes/request.php');
-
 require_once(CODE_PATH.'/classes/debug.php');
-
-print "<br>hit line : ".__line__;
-//die();
-
-//line();
-
-//die();
-
-//var_dump(ASDF);
-//stop();
 require_once(CODE_PATH.'/classes/util.php');
-line();
 require_once(CODE_PATH.'/classes/auth.php');
-line();
 require_once(CODE_PATH.'/classes/db.php');
-line();
 require_once(CODE_PATH.'/classes/form.php');
-line();
 require_once(CODE_PATH.'/classes/log.php');
-line();
 require_once(CODE_PATH.'/classes/model.php');
-line();
 require_once(CODE_PATH.'/config/types.php');
-line();
 require_once(CODE_PATH.'/classes/perm.php');
-line();
 require_once(SAPHPIRE_PATH.'/third_party/Mobile_Detect/2.8.17/Mobile_Detect.php');
-
-line();

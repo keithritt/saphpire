@@ -8,13 +8,9 @@ class Session
 	public static $iId = null;
 	public static $sName = null;
 
-	//public static $oDb = null;
-
 	// this is first custom function called - can only use native php functions
 	public static function init()
 	{
-		//pr('Session::init()');
-		//stop();
 		if(self::$bInitialized)
 		{
 			if(method_exists('Log', 'error'))
@@ -22,34 +18,25 @@ class Session
 			return;
 		}
 
-		//print('Session->init()');
-
 		self::$iId = self::get_cookie('session_id');
 		self::$sName = self::get_cookie('session_name');
 
 		if(isset(self::$iId, self::$sName))
 		{
-			//line();
 			session_id(self::$sName);
-			//define('SESSION_ID', self::$iId);
 		}
 		else
 		{
-			//line();
 			session_regenerate_id();
 		}
 
 		session_start();
 
 		self::$sName = session_id();
-		//define('SESSION_NAME', self::$sName);
 		self::set_cookie('session_name', self::$sName);
 
-
-		//expose($_SESSION);
 		if(isset($_SESSION['aData']))
 		{
-			//expose($_SESSION);
 			Session::$aData = $_SESSION['aData'];
 		}
 		else
@@ -63,25 +50,13 @@ class Session
 		if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']))
 			unset($_SESSION['aFlashData']);
 
-		//self::$oDb = new Db();
-
-		//self::upsert_record();
-
 		self::$bInitialized = true;
-
-		//expose(static::$aData);
-		//die();
 	}
 
 	public static function upsert_record()
 	{
-		//expose_backtrace();
-		//stop();
-		//pr('Session::upsert_record()');
-		// self::$sName is assumed to be populated
 		if(is_null(self::$iId))
 		{
-			//line();
 			// see if there is a row already in the session table
 			$sSql = "
 			SELECT
@@ -91,14 +66,7 @@ class Session
 			WHERE
 				name = ".Db::esc(self::$sName);
 
-			//expose($sSql);
-
-			//line();
-
 			$aRow = Db::$oMaster->select_row($sSql);
-			//line();
-
-			//expose($aRow);
 
 			if(isset($aRow['id']))
 			{
@@ -107,14 +75,12 @@ class Session
 			}
 			else
 				$bInsert = true;
-
 		}
 		else
 			$bInsert = true;
 
 		if($bInsert)
 		{
-			//line();
 			// insert a new row
 			$sSql = "
 			INSERT INTO
@@ -136,32 +102,15 @@ class Session
 				now(),
 				now()
 			)";
-			//expose($sSql);
-			//$iInsertId =
-		  //line();
 			self::$iId = Db::$oMaster->insert($sSql);
 		}
 
-
-
-
-
 		self::set_cookie('session_id', self::$iId);
-
-		//stop();
-
-
-
-
-
 	}
 
 	public static function set($sLookup, $vVal)
 	{
-		//pr('Session::set('.$sLookup.')');
-		//expose($vVal);
 		$aParts = explode('||', $sLookup);
-		//expose($aParts);
 		// TODO - find a better way to do this
 		switch(count($aParts))
 		{
@@ -202,8 +151,6 @@ class Session
 				Log::error('Using Session->set with a unknown # of $aParts: '.count($aParts));
 				break;
 		}
-		//static::$aData[$aParts[0]] = $vVal;
-		//expose(static::$aData);
 
 		// sync with session
 		// TODO - make sure resaving the entire array isnt a waste
@@ -219,10 +166,7 @@ class Session
 			return null;
 
 		$aParts = explode('||', $sLookup);
-		//expose($aParts);
 		// TODO - find a better way to do this
-
-
 
 		$vRet = $_SESSION['aData'];
 		foreach($aParts as $sPart)
@@ -232,18 +176,12 @@ class Session
 			else
 				return null;
 		}
-		//line();
-		//expose($vRet);
 		return $vRet;
 	}
-
-
-
 
 	// TODO - this leaves the key in the array - need to unset that as well
 	public static function clear($sLookup)
 	{
-		//pr('Session::clear()');
 		self::set($sLookup, null);
 	}
 
@@ -264,12 +202,7 @@ class Session
 	// TODO - figure out domain param
 	public static function set_cookie($sName, $sValue, $iExpire = 0, $sPath = '/', $sDomain = null)
 	{
-			//pr('Session::set_cookie('.$sName.')');
-			//expose($sValue);
-			//if($sValue == null)
-			//		Log::deprecated_code('');
 			$bRes = setcookie($sName, $sValue, $iExpire, $sPath);
-			//var_dump($bRes);
 			if(!$bRes && method_exists('Log', 'error'))
 				Log::error('set_cookie() failed.');
 	}
@@ -285,96 +218,33 @@ class Session
 	// TODO - would like this moved to a login utility class  - but currently there is no such class - only a controller
 	public static function fetch_login()
 	{
-		//pr('Session::fetch_login()');
-
-		///stop();
 		$aRet = Session::get('login');
-		//expose($aRet);
 		if(isset($aRet))
 			return $aRet;
-
-		// if the session is expired - check cookie - and relog the user in
-
-		//expose($_COOKIE);
 
 		$sLoggedInUsers = '0';
 
 		$sPublicHashes = Session::get_cookie('public_hash');
 		if(isset($sPublicHashes) && $sPublicHashes != '')
 		{
-			//line();
 			$aPublicHashes = explode(',', $sPublicHashes);
 			$sLoggedInUsers = Session::get_cookie('logged_in_users');
 		}
 
-		//expose($sLoggedInUsers);
-		//stop();
-
 		if(isset($sLoggedInUsers) && $sLoggedInUsers != '0')
 		{
-			//pr('hit if');
-			//if(file_exists(APPPATH.'controllers/'.DOMAIN_FOLDER.'/login_controller.php'))
-		//		require_once(APPPATH.'controllers/'.DOMAIN_FOLDER.'/login_controller.php');
-
 			$sLoginType = Util::coalesce(Session::get('login_type'), 'barmend');
-			expose($sLoginType);
-			//stop();
 
 			switch($sLoginType)
 			{
-				case 'barmend':
-
-					$oDb = new Db('barmend');
-
-					$aLoggedInUsers = explode(',', $sLoggedInUsers);
-					foreach($aLoggedInUsers as $iKey => $iMemberId)
-					{
-						//expose($iKey);
-						//expose($iMemberId);
-						$oMember = Model::init('barmend', 'members', $oDb);
-						$oMember->fetch($iMemberId, '0 or 1');
-						if(isset($oMember->password))
-						{
-							$sUserHash = Auth::get_public_hash($oMember->password);
-							if($sUserHash == $aPublicHashes[$iKey])
-							{
-								//pr('hit if');
-								//Login_controller::_log_in_user($iMemberId);
-							}
-							//else
-								//pr('hit else');
-							//expose($aPublicHashes[$iKey]);
-						}
-						//else
-							//pr('hit else');
-						//expose($oMember);
-						//
-					}
-
-					//expose($aLoggedInUsers);
-					//expose($_SESSION);
-
-					break;
 				case 'oloop':
-					pr('oloop login');
-					//expose($sLoggedInUsers);
 					if($sLoggedInUsers == '1')
 					{
-						$aLoginData = array('first_name' => 'Keith');
 						Session::set('login', $aLoginData);
 					}
 					break;
 			}
-
-
 		}
-
-
-		//stop();
-
 		return Session::get('login');
 	}
-
-
-
 }

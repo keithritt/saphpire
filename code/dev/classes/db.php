@@ -1,25 +1,9 @@
 <?
 
-//Db = new Db('barmend', 'dev');
-
-//poze($oDb);
-
-
-
 class Db
 {
-  //private
-  //  $sSchema = SCHEMA,
-  //  $sEnv = ENV;
-
-  //public static $_sSchema = 'master';
-  //public static $_sEnv = DB_ENV;
-  //public static $_oConn = null;
-
   public static $oMaster = null;
   public static $oBarmend = null;
-  //public static $bTransaction = false;
-
   public static $iErrorCount = 0;
 
   public static function __callStatic($sFunction, $aArgs)
@@ -29,41 +13,21 @@ class Db
 
   public static function static_init($sSchema)
   {
-    //pr('Db->static_init('.$sSchema.')');
     switch($sSchema)
     {
       case 'master':
-        //line();
         self::$oMaster = new Db($sSchema);
-        //line();
         break;
-      case 'barmend':
-        //////line();
-        self::$oBarmend = new Db($sSchema);
-        break;
-      //default:
-      //  line();
     }
-
-    //expose(Db::$oMaster);
-    //self::$oStatic = new Db($sSchema);
   }
-
 
   public function __call($sFunction, $aArgs)
   {
-    //pr('call('.$sFunction.')');
     return $this->call_function($sFunction, $aArgs);
   }
 
   private function call_function($sFunction, $aArgs)
   {
-    //pr('call_function('.$sFunction.')');
-    //expose($bStatic);
-    //expose_backtrace();
-
-    //expose($aArgs);
-
     $sSql = $aArgs[0];
 
     switch($sFunction)
@@ -77,9 +41,6 @@ class Db
       case 'update':
       case 'delete':
       case 'admin':
-        //if($bStatic)
-        //  return self::exec($bStatic, $sSql, $sFunction); //@TODO this is triggering strict standards errors
-        //else
           return $this->exec($sSql, $sFunction);
         break;
     default:
@@ -91,19 +52,14 @@ class Db
   // want to switch this to only allow connecting as 1 schema
   public function __construct($sSchema, $sEnv = null)
   {
-    //pr('Db->__construct('.$sSchema.', '.$sEnv.')');
-    //expose($sEnv);
-    //expose(ENV);
     $this->sSchema = $sSchema; //strtolower(Util::coalesce($sSchema, 'master')); //used to default to SCHEMA
     $this->sEnv = strtolower(Util::coalesce($sEnv, DB_ENV));
-    //expose($this->sEnv);
     $this->bTransaction = false;
     $this->create_conn('update');
   }
 
   public function __destruct()
   {
-    //pr('db->destruct()');
     if($this->bTransaction)
     {
       if(Request::$bDebugMode)
@@ -113,38 +69,14 @@ class Db
 
   private function create_conn($sType)
   {
-    //pr('create_conn()');
-
     $sSchema = $this->sSchema;
     $sEnv = $this->sEnv;
-
-
-    //expose($sSchema);
-    //expose($sEnv);
-    //  if(self::$sSchema == 'iamjacksjourney')
-    //    $sDb = 'oloop_iamjacksjourney_prod';
-    //  else
-        $sDb = 'oloop_'.$sSchema.'_'.$sEnv;
-
-    //expose($sType);
-    //expose($sEnv);
-
-    //die();
-
-    //line();
-    //expose(self::get_user($sType, $sEnv));
-    //line();
-    //expose(self::get_pass($sType, $sEnv));
-    //line();
-
-    //die();
+    $sDb = 'oloop_'.$sSchema.'_'.$sEnv;
 
     $oConn = new mysqli('localhost', self::get_user($sType, $sEnv), self::get_pass($sType, $sEnv), $sDb);
     $this->oConn = $oConn;
     return $oConn;
   }
-
-
 
   public function begin()
   {
@@ -152,7 +84,6 @@ class Db
     {
     if(Request::$bDebugMode)
       die('Attempting to nest multiple begins');
-      //TODO - log non debug mode
     }
     $this->bTransaction = true;
     return $this->exec('BEGIN', 'begin', null, false);
@@ -164,7 +95,6 @@ class Db
     {
       if(Request::$bDebugMode)
         die('Attempting commit without a begin');
-      //TODO - log non debug mode
     }
     $this->bTransaction = false;
       return $this->exec('COMMIT', 'commit', null, false);
@@ -182,76 +112,32 @@ class Db
     return $this->exec('ROLLBACK', 'rollback', null, false);
   }
 
-
-
   private function exec($sSql, $sType, $iThreshold = 100, $bRecordStat = true)
   {
-    //pr('*******Db::Exec()');
-    //expose($bStatic);
-    //expose_backtrace();
-
-      $sSchema = $this->sSchema;
-      $sEnv = $this->sEnv;
-      $oConn = $this->oConn;
-
+    $sSchema = $this->sSchema;
+    $sEnv = $this->sEnv;
+    $oConn = $this->oConn;
 
     if(is_null($oConn))
     {
       expose_backtrace();
     }
 
-    //expose($sSchema);
-    //expose($sEnv);
-    //pr($sType);
-  //pr($sEnv);
-  //expose(self::$sSchema);
-
-
-    //$this->$sSchema = strtolower(Util::coalesce($sSchema, $thissSchema));
-    //self::$sEnv = strtolower(Util::coalesce($sEnv, self::$sEnv));
-
-   // expose(self::$sSchema);
-    if($sSchema == 'iamjacksjourney')
-        $sEnv = 'prod';
-
-
-
-    //pr($sSchema);
-    //pr($sEnv);
-
     // only allow selects in production
     if( $sEnv == 'prod' &&
         Request::$bDebugMode &&
-        in_array($sType, array('insert', 'update', 'delete'))
-        && !in_array($sSchema, array('iamjacksjourney')))
+        in_array($sType, array('insert', 'update', 'delete')))
       return false;
 
     $fStart = microtime(true);
 
-    //expose(self::get_user($sType, $sEnv));
-    //expose(self::get_pass($sType, $sEnv));
-    //die();
-
-   // if($sSchema == 'iamjacksjourney')
-   //   $sDb = 'oloop_iamjacksjourney_prod';
-   // else
-   //   $sDb = 'oloop_'.$sSchema.'_'.$sEnv;
-
-
-   // $oConn = new mysqli('localhost', self::get_user($sType, $sEnv), self::get_pass($sType, $sEnv), $sDb);
-  //if(is_null(static::$oConn))
-    //self::create_conn($sType);
-    //expose($oConn->dump_debug_info());
-    //expose($sSql);
     $oRes = $oConn->query($sSql);
-    //expose($oRes);
 
     $vRet = null;
     if(!$oRes) // had an error executing query
     {
       DB::$iErrorCount++;
-      //pr(DB::$iErrorCount);
-      //expose($sSql);
+
       if(DB::$iErrorCount > 100 || (Request::$bDebugMode && DB::$iErrorCount > 3))
         return; // avoid infinite loops
       $vRet =  false;
@@ -262,10 +148,9 @@ class Db
       $aDebug = debug_backtrace();
 
       unset($aDebug[0], $aDebug[1]);
-      //expose($aDebug[2]);
+
       foreach($aDebug as $aStep)
       {
-        //expose($aStep['file']);
         if(stripos($aStep['file'], 'model'))
           continue;
 
@@ -273,33 +158,18 @@ class Db
         $iLine = $aStep['line'];
 
         break;
-
       }
-
-
-
-
 
       if(Request::$bDebugMode)
       {
         pr('SQL_ERROR @ '.$sFile.' line '.$iLine);
         expose($sError);
         expose($sSql);
-        //stop();
       }
 
-
-
-
-      expose($bRecordStat);
-      //stop();
       if($bRecordStat)
       {
-        //expose($sSql);
-        //die();
-        //line();
         Log::_error($sErrorClean, Log::PRIORITY_CRITICAL, Log::TYPE_SQL_ERROR, $sSqlClean, $sFile, $iLine);
-        //line();
       }
 
       if(defined('DIE_ON_SQL_ERROR') && DIE_ON_SQL_ERROR)
@@ -309,21 +179,15 @@ class Db
     }
     else
     {
-      //expose($sType);
       switch($sType)
       {
         case 'insert':
-          //line();
-          //expose($sSql);
           $vRet =  $oConn->insert_id;
-          //expose($vRet);
-          //die();
           break;
         case 'update':
           $vRet = $oConn->affected_rows;
           break;
         case 'select_row':
-          //line();
           if($oRes->num_rows)
             $vRet = $oRes->fetch_assoc();
           else
@@ -336,7 +200,6 @@ class Db
 
           break;
         case 'select_rows_and_count':
-          //line();
           $vRet = array();
           while($aRow = $oRes->fetch_array(MYSQLI_ASSOC))
             $vRet[] = $aRow;
@@ -347,11 +210,8 @@ class Db
           break;
       }
     }
-    //line();
-    //self::$oConn->close();
 
     $fTotalTime = (microtime(true) - $fStart) * 1000;
-    //expose($fTotalTime);
 
     if($fTotalTime > $iThreshold)
     {
@@ -364,13 +224,7 @@ class Db
       //record_stat($fTotalTime, 'query_exec', $sMd5, DOMAIN);
     }
 
-
-
-
-   // expose($vRet);
-    //line();
     return $vRet;
-
   }
 
   public static function keyword($sString)
@@ -387,14 +241,9 @@ class Db
 
   public static function esc($sString)
   {
-    //pr('Db->esc('.$sString.')');
-    //line();
-    //expose(self::get_user('select_row', 'dev'));
-    //stop();
     if(is_null($sString))
       return 'NULL';
-    //if(function_exists('mysql_escape_string'))
-    //if(!isset($_SESSION['oMySqli']))
+
     try
     {
       // not sure why - but previously used $_SESSION['oMySqli']
@@ -405,13 +254,6 @@ class Db
     {
       $sString = "`".$sString."`";
     }
-    //else
-    //{
-      //$sString = addslashes($sString);
-    //}
-
-    //$sString = str_replace(array('%', '_'), array('\\%', '\\_'), $sString);
-
 
     return "'".$sString."'";
   }
@@ -419,11 +261,9 @@ class Db
   // format a unix timestamp to a mysql datetime
   public static function datetime($iTimestamp, $bAddQuotes = true)
   {
-		//pr('Db::dateime('.$iTimestamp.')');
-
 		if(!is_int($iTimestamp)) // for the timesstamp to unix
 			$iTimestamp = Util::strtotime($iTimestamp);
-    //expose($iTimestap);
+
 			$sRet =  date('Y-m-d H:i:s', $iTimestamp);
     if($bAddQuotes)
       $sRet = "'".$sRet."'";
@@ -432,8 +272,6 @@ class Db
 
   public static function date($sDate, $bAddQuotes = true)
   {
-
-    //pr('Db::date('.$sDate.')');
     $sRet =  date('Y-m-d', Util::strtotime($sDate));
     if($bAddQuotes)
       $sRet = "'".$sRet."'";
@@ -456,36 +294,27 @@ class Db
       return (float)$fFloat;
   }
 
-
   public static function get_user($sType, $sEnv)
   {
-    //pr('Db::get_user('.$sType.', '.$sEnv.')');
     switch($sEnv)
     {
       case 'dev':
-        //line();
-        //expose(Auth::$sAccess);
         switch(Auth::$sAccess)
         {
           case 'apache':
             //line();
             return Auth::decrypt('/3ZnkOnfddpM7CMcIuj79M1Js4cKD889lBc253sFrJY=');
-          case 'zak':
-            return Auth::decrypt('S2FFWVanWxrizRDKOEeaqtMHVOvcFEWJCKogwH0eM+E=');
         }
       case 'beta':
         switch(Auth::$sAccess)
         {
           case 'apache':
             return Auth::decrypt('6zpbp02bJ81YwKJ2Vu2/QjEIK644zfAllg1dA3hXRRM=');
-          case 'zak':
-            return Auth::decrypt('nFvjmWx0LQ7dlkjF2fS09HP2dEbbVdWUU1p6R9Gz5jA=');
         }
       case 'prod':
         switch(Auth::$sAccess)
         {
           case 'apache':
-            //line();
             switch($sType)
             {
               case 'select':
@@ -507,33 +336,25 @@ class Db
               //line();
                 return Auth::decrypt('gLd2mE3rOyatAdEaUcdBYaYYWpzDqP2BalZuRvfDRHY=');
             }
-          case 'zak':
-            return Auth::decrypt('DzpHSWpWIPKD87LR2qwIBmwBZDbCxi4+VrPbF0tfb5M=');
         }
     }
   }
 
-
   public static function get_pass($sType, $sEnv)
   {
-    //pr('Db::get_pass('.$sType.', '.$sEnv.')');
-  switch($sEnv)
+    switch($sEnv)
     {
       case 'dev':
         switch(Auth::$sAccess)
         {
           case 'apache':
             return Auth::decrypt('JzV3AiU55AU6lv54ZFbe2hOx9n5qronFsR0sJasH7cE=');
-          case 'zak':
-            return Auth::decrypt('NVhWVy+iNLa6ljwQKv6D7jKJSqtgD3N9uUYfW+GLe4Q=');
         }
       case 'beta':
         switch(Auth::$sAccess)
         {
           case 'apache':
             return Auth::decrypt('1+cBI+YQtD9vaP5RhsT+mjNu/YyCb/DoJq/Nh9Esu58=');
-          case 'zak':
-            return Auth::decrypt('PfeFcG1D1v3s49ZWPfRrLUZO9xZdW2iKHkH467SsWCE=');
         }
       case 'prod':
         switch(Auth::$sAccess)
@@ -545,7 +366,6 @@ class Db
               case 'select_row':
               case 'select_rows':
         case 'select_rows_and_count':
-        //line();
                 return Auth::decrypt('kD7cXrndIwjKsZ5hwjbM3wR0pK4xzb2VUdDNK+fGZVo=');
               case 'insert':
                 return Auth::decrypt('UpwsHZhQ99H+7PNiuSdrzNTbDelXgmRnarOwSqXrSeA=');
@@ -556,8 +376,6 @@ class Db
               case 'admin':
                 return Auth::decrypt('6sHbQmT1/6TWKERE6Rm3T2/wE1mBlvxXOWuUN+wzM9E=');
             }
-          case 'zak':
-            return Auth::decrypt('uzfVfdbGeuNdeKvDfm5AEevMNezQkUe9nvOFGQEYhAA=');
         }
     }
   }
@@ -566,7 +384,6 @@ class Db
   {
     $sSql = trim($sSql);
     $aWords = explode(' ', $sSql);
-    //expose($aWords);
     $sIntro = strtoupper($aWords[0]);
     switch($sIntro)
     {
@@ -597,8 +414,6 @@ class Db
 
   public static function build_where($aLookups)
   {
-    //pr('build_where');
-    //expose($aLookups);
     $aTmp = array();
     foreach($aLookups as $sCol => $vVal)
     {
@@ -608,12 +423,7 @@ class Db
         $aTmp[] = $sCol.' = '.$vVal;
       else
         $aTmp[] = $sCol.' = '.self::esc($vVal);
-
-
     }
-
-       // expose($aTmp);
-
       return implode($aTmp, ' AND ');
   }
 
@@ -627,7 +437,6 @@ class Db
         $sTable
       WHERE
         id = ".(int)$iId;
-      //expose($sSql);
 
       $aRes =  $this->select_row($sSql);
       if(count($aRes))
@@ -635,7 +444,4 @@ class Db
       else
         return false;
   }
-
-
-
 }

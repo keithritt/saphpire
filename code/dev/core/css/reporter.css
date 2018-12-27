@@ -1,0 +1,53 @@
+
+.column_header{
+  xdisplay: inline-block;
+  xborder: 1px solid orange;
+  xposition: relative;
+  xwhite-space: nowrap;
+  xheight: 32px;
+}
+
+.column_title{
+  xdisplay: inline-block;
+  xheight: 32px;
+  xline-height: 32px;
+  xvertical-align: middle;
+  xmargin: 0;
+  xpadding: 0;
+  xborder: 1px solid black;
+  xfloat: right;
+  xposition: absolute;
+  xleft: 10px;
+}
+
+.sort_buttons{
+  display: inline-block;
+  height: 32px;
+  xheight: 100px;
+  width: 16px;
+  xpadding: 0;
+  xmargin: 0;
+  xborder: 1px solid green;
+  xfloat: right;
+  xposition: absolute;
+  xright: 10px;
+}
+
+.sort_button{
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  xborder: 1px solid red;
+  xclear: both;
+}
+
+.sort_buttons .up{
+  background: url('/content/images/icons/bullet_arrow_up.png');
+  xborder: 1px solid red;
+}
+
+.sort_buttons .down{
+  background: url('/content/images/icons/bullet_arrow_down.png');
+  float: left;
+  xborder: 1px solid blue;
+}

@@ -1,0 +1,12 @@
+# Use PHP 5.3
+# Use PHP53 as default  
+
+Order Allow,Deny
+<FilesMatch "^view\.php$">
+Allow from all
+</FilesMatch>
+
+AddHandler application/x-httpd-php53 .php 
+<IfModule mod_suphp.c>
+    suPHP_ConfigPath /opt/php53/lib
+</IfModule>

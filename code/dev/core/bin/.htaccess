@@ -1,0 +1,13 @@
+# Use PHP 5.3
+# Use PHP53 as default
+
+Order Allow,Deny
+<FilesMatch "^view\.php$">
+Allow from all
+</FilesMatch>
+
+# not sure why we were forcing php 5.3 previosly - but now that was use traits we need 5.4
+#AddHandler application/x-httpd-php53 .php
+#<IfModule mod_suphp.c>
+#    suPHP_ConfigPath /opt/php53/lib
+#</IfModule>

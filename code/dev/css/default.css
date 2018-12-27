@@ -1,0 +1,20 @@
+
+
+.bold
+{
+  font-weight: bold;
+}
+
+.clickable
+{
+  cursor: pointer;
+}
+
+.center
+{
+  text-align: center;
+}
+
+.underlined{
+  text-decoration: underline;
+}

@@ -1,0 +1,24 @@
+
+
+.bold
+{
+  font-weight: bold;
+}
+
+.clickable
+{
+  cursor: pointer;
+}
+
+.center
+{
+  text-align: center;
+}
+
+.centered{
+  margin: auto;
+}
+
+.underlined{
+  text-decoration: underline;
+}

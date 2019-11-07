@@ -1,12 +1,6 @@
 <?
 
-//pr('start of end.php');
-//expose_backtrace();
-//expose($aJs);
-
 $sHtml = '';
-
-//expose($this->aJs);
 
 if(isset(Controller::$aJs['body_end']))
 {
@@ -21,27 +15,7 @@ $fPhpTime = number_format((microtime(true) - START_TIME), 2);
 
 if(Request::$bDebugMode)
 {
-	//expose(URL_PREFIX.DOMAIN);
 	$aDomains = array();
-	//$aFiles = scandir(PUBLIC_HTML_PATH.'/'.ENV.'/application/controllers');
-	//unset($aFiles[0], $aFiles[1]); // remove . and ..
-
-	//foreach($aFiles as $sFile)
-	//{
-	//	if(in_array($sFile, array('brewskistavern_com', 'keithritt_net', 'officialloop_com', 'bars')))
-	//		continue;
-	//  if(is_dir(PUBLIC_HTML_PATH.'/'.ENV.'/application/controllers/'.$sFile))
-//		 $aDomains[$sFile] = str_replace(array('_', 'corner.bar'), array('.', 'corner-bar'), $sFile);
-//	}
-
-	//expose($aDomains);
-
-
-
-
-
-
-
 $sHtml.= '
 
 <div id="debug_bar" style="
@@ -76,8 +50,6 @@ $sHtml.= '
 
 
 ';
-//_get_dropdown($sName, $aOptions, $vDefault = null, $aAttributes = null)
-
 }
 
 $sHtml.=  '
@@ -95,6 +67,5 @@ set_js_time(); // this should always be the last js statement on the page
 </script>
 </body>
 </html>';
-
 
 return $sHtml;

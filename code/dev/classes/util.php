@@ -4,8 +4,6 @@ class Util
 {
   public static function coalesce()
   {
-    //pr('coalesce()');
-    //Log::deprecated_code();
       foreach(func_get_args() as $vArg)
       {
         if(isset($vArg))
@@ -17,7 +15,6 @@ class Util
 
   public static function is_int($vInt)
   {
-    //expose(gettype($vInt));
     switch(gettype($vInt))
     {
       case 'object':
@@ -29,7 +26,6 @@ class Util
 
   public static function strtotime($sString)
   {
-    //expose('_strtotime()');
     $iTs = strtotime($sString);
 
     if(!$iTs)
@@ -59,7 +55,6 @@ class Util
 
   public static function format_phone($params)
   {
-    //expose($params);
     if(is_array($params))
       extract($params);
     else
@@ -88,7 +83,6 @@ class Util
 
     $phone = self::clean_phone($phone);
 
-
     $ret = array();
     if(strlen($phone) == 10)
     {
@@ -109,7 +103,6 @@ class Util
   // removed unwanted characters from a phone #
   public static function clean_phone($params)
   {
-    //expose('clean_phone()');
     if(is_array($params))
       extract($params);
     else
@@ -131,9 +124,7 @@ class Util
     WHERE
       parent_type_id = ".(int)$iParentTypeId;
 
-    //expose($sSql);
     return DB::$oMaster->select_rows($sSql);
-    //expose($aTypes);
   }
 
   public static function _get_type_dropdown($iParentTypeId, $sName, $aAttributes = array())
@@ -146,8 +137,6 @@ class Util
     {
       $aOptions[$aTypes['id']] = $aTypes['display'];
     }
-    //expose($aOptions);
-
     return Form::_get_dropdown($sName, $aOptions, null, $aAttributes);
   }
 
@@ -160,8 +149,7 @@ class Util
 
     return $sRet;
   }
-
-
+  
   // easy way to get a lot of html space characters
   public static function br($iNum = 1)
   {
@@ -190,14 +178,12 @@ class Util
     }
 
     return $sRet;
-
   }
 
 
   public static function get_random_pastel()
   {
     $aPastels = array(
-      //'#FF7575',
       '#9669FE',
       '#57BCD9',
       '#72FE95',
@@ -211,10 +197,6 @@ class Util
       static $iRand = -1;
       if($iRand == -1)
         $iRand = rand(0, $iCount - 1);
-
-      //$iRand = $iCount % $iRand;
-
-      //expose($iRand);
 
       $sRet =  $aPastels[$iRand];
 
@@ -234,7 +216,4 @@ class Util
       return '';
     return '$'.number_format($iAmount, 2);
   }
-
-
-
 }

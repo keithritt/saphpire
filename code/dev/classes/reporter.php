@@ -2,20 +2,14 @@
 
 class Reporter
 {
-
   //@TODO - this does a lot of unnecessary stuff when only RunReport() is executed
   function __construct($sReport, $oController = null)
   {
     if(isset($oController))
       Log::deprecated_code('Reporter with controller passed in.');
 
-    //expose($_REQUEST);
-    //expose('Reporter->__construct('.$sReport.')');
-    //$this->oController = $oController;
     Controller::add_js('/code/'.CODE_ENV.'/js/reporter.js', 'body_end');
     Controller::add_css('/code/'.CODE_ENV.'/css/reporter.css');
-
-    //line();
 
     $this->sReport = $sReport;
     $this->iPage = 1;
@@ -31,17 +25,8 @@ class Reporter
     $this->sNoRowsMsg = 'No data available.';
     $this->aExtra = (array)Controller::_get('extra');
 
-    //expose($this->aExtra);
-
-    //line();
-
-
-    //if(isset())
-    //  $this->aExtra = array();
-
     $this->aSpecialCols = array('_edit', '_delete', '_edit_delete');
 
-    //line();
     switch($this->sReport)
     {
       case 'page_views':
@@ -73,8 +58,6 @@ class Reporter
         LEFT JOIN
           domains ON (domains.id = sessions.domain_id)";
 
-         //expose($this->sSql);
-
         $this->sDefaultSortCol = 'ts';
         $this->sDefaultSortDir = 'DESC';
         $this->aColumns = array
@@ -89,11 +72,6 @@ class Reporter
             'display' => 'Session',
             'class' => 'col-md-1',
           ),
-          //'session_name' => array
-         // (
-         //   'display' => 'Session Name',
-         //   'class' => 'col-md-1',
-         // ),
           'domain' => array
           (
             'display' => 'Domain',
@@ -183,19 +161,13 @@ class Reporter
         LEFT JOIN
           email_recipients ON (
             email_recipients.email_id = emails.id)
-       -- LEFT JOIN
-       --   types email_status ON (
-       --     email_status.id = emails.status_id)
         LEFT JOIN
           types priority ON (
             priority.id = emails.priority_id)
         LEFT JOIN
           types status ON (
             status.id = email_recipients.status_id)
-
          ";
-
-         //expose($this->sSql);
 
         $this->sDefaultSortCol = 'emails.wait_ts';
         $this->sDefaultSortDir = 'DESC';
@@ -278,8 +250,6 @@ class Reporter
             ".Log::TYPE_SQL_SLOW.",
             ".Log::TYPE_DEPRECATED.")";
 
-        //expose($this->sSql);
-
         $this->sDefaultSortCol = 'logs.create_ts';
         $this->sDefaultSortDir = 'DESC';
         $this->aColumns = array
@@ -354,7 +324,6 @@ class Reporter
           page_views.id page_view_id,
           domains.domain,
           COALESCE(types.display, types.type) type_name
-
         FROM
           logs
         LEFT JOIN
@@ -370,8 +339,6 @@ class Reporter
             types.id = logs.type_id)
         WHERE
           logs.type_id = ".Log::TYPE_MSG;
-
-        //expose($this->sSql);
 
         $this->sDefaultSortCol = 'logs.create_ts';
         $this->sDefaultSortDir = 'DESC';
@@ -443,15 +410,9 @@ class Reporter
         LEFT JOIN
            domains ON (
               domains.id = types.domain_id)";
-
-        //expose($this->sSql);
-
         $this->sDefaultSortCol = "types.id";
-        //$this->sDefaultSortDir = "DESC";
         $this->aColumns = array
         (
-          //<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-
           'id' => array
           (
             'display' => 'ID',
@@ -482,7 +443,6 @@ class Reporter
             'display' => 'Domain',
             'class' => 'col-md-1',
           ),
-
         );
 
         break;
@@ -508,7 +468,6 @@ class Reporter
          ";
 
         $this->sDefaultSortCol = 'id';
-        //$this->sDefaultSortDir = 'DESC';
         $this->aColumns = array
         (
           '_edit_delete' => array
@@ -609,10 +568,6 @@ class Reporter
         '<label class="col-sm-2 control-label">Status:</label>
               <div class="col-sm-10">';
 
-
-
-        //require_once(APPPATH.'libraries/universal_definitions.php');
-
         $aStatuses = array(
           TYPE_SCHEDULER_STATUS_DISABLED => 'Disabled',
           TYPE_SCHEDULER_STATUS_READY => 'Ready',
@@ -631,156 +586,12 @@ class Reporter
 
         $aTmp['footer'] = '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-default" onclick="save_cron();">Save Cron</button>';
-        //line();
 
         $this->oController->add_modal($aTmp);
-        //line();
-
-        break;
-      case 'training_stats':
-        $this->sTitle = 'Training Stats';
-        $this->sSchema = 'iamjacksjourney';
-        $this->sSql = "
-        SELECT
-          CONCAT('<a href=\"/training/edit_stat?id=', id ,'\">edit</a>') edit_link,
-          name,
-          date,
-          miles_run,
-          bike_mileage,
-          push_ups,
-          pull_ups,
-          sit_ups,
-          sprints,
-          mat_time,
-          weight,
-          extra
-        FROM
-          training
-         ";
-
-        $this->sDefaultSortCol = "date";
-        $this->sDefaultSortDir = "DESC";
-        $this->aColumns = array
-        (
-          'edit_link' => array
-          (
-            'display' => '',
-            'width'=> 20,
-          'sortable' => false,
-          ),
-          'name' => array
-          (
-            'display' => 'Name',
-          ),
-          'date' => array
-          (
-            'display' => 'Date',
-            'callback' => 'date',
-          ),
-          'miles_run' => array
-          (
-            'display' => 'Mileage',
-          ),
-          'bike_mileage' => array
-          (
-            'display' => 'Bike Mileage',
-
-          ),
-          'push_ups' => array
-          (
-            'display' => 'Push Ups',
-          ),
-          'pull_ups' => array
-          (
-            'display' => 'Pull Ups',
-          ),
-          'sit_ups' => array
-          (
-            'display' => 'Sit Ups',
-          ),
-          'sprints' => array
-          (
-            'display' => 'Sprints',
-          ),
-          'mat_time' => array
-          (
-            'display' => 'Mat Time',
-          ),
-          'weight' => array
-          (
-            'display' => 'Weight',
-          ),
-          'extra' => array
-          (
-            'display' => 'Extra',
-          ),
-        );
-
-        break;
-      case 'bar_specials':
-        $this->sTitle = 'specials';
-        $this->sSchema = 'barmend';
-        $this->sSql = "
-        SELECT
-          specials.id special_id,
-          specials.amount,
-          specials.display,
-          specials.interval_id,
-          specials.interval_desc,
-          intervals.display interval_name,
-          weekdays.display weekday_name
-        FROM
-          specials
-         JOIN
-           ".MASTER_SCHEMA.".types intervals on (intervals.id = specials.interval_id)
-        LEFT JOIN
-          types weekdays on (weekdays.id = specials.interval_desc)";
-
-        //expose($this->sSql);
-
-        //$this->sDefaultSortCol = "date";
-        //$this->sDefaultSortDir = "DESC";
-        $this->aColumns = array
-        (
-          //<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          '_edit_delete' => array
-          (
-            'display' => '',
-            //'width'=> 20,
-            'class' => 'col-md-1 center',
-            'sortable' => false,
-            'edit_onclick' => 'edit_special('.DELIMITER.'special_id'.DELIMITER.')',
-            'delete_onclick' => 'delete_special('.DELIMITER.'special_id'.DELIMITER.')',
-          ),
-          'special_id' => array
-          (
-            'display' => false,
-            'row_id' => true,
-          ),
-          'amount' => array
-          (
-            'display' => 'Price',
-            'callback' => 'money',
-          ),
-          'display' => array
-          (
-            'display' => 'Drink',
-          ),
-          'interval_name' => array
-          (
-            'display' => 'Occurrence',
-          ),
-          'interval_desc' => array
-          (
-            'display' => 'Description',
-            'callback' => 'translate_interval_desc',
-          ),
-
-        );
 
         break;
 
-      case 'bar_albums':
+      case 'albums':
         $this->sTitle = 'albums';
         $this->sSchema = 'barmend';
         $this->sSql = "
@@ -795,16 +606,10 @@ class Reporter
         LEFT JOIN
           ".MASTER_SCHEMA.".types statuses ON (statuses.id = albums.status_id)
         WHERE
-          albums.xref_type_id = ".(int)TYPE_XREF_BAR." AND
-          albums.xref_id = ".(int)Session::get('login||bar_data||id');
+          albums.xref_id = ".(int)Session::get('login||data||id');
 
-        //expose($this->sSql);
-
-        //$this->sDefaultSortCol = "date";
-        //$this->sDefaultSortDir = "DESC";
         $this->aColumns = array
         (
-          //<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           '_edit_delete' => array
           (
             'display' => '',
@@ -838,148 +643,13 @@ class Reporter
         );
 
         break;
-      case 'bar_events':
-        $this->sTitle = 'specials';
-        $this->sSchema = 'barmend';
-        $this->sSql = "
-        SELECT
-          specials.id special_id,
-          specials.amount,
-          specials.display,
-          specials.interval_id,
-          specials.interval_desc,
-          intervals.display interval_name,
-          weekdays.display weekday_name
-        FROM
-          specials
-         JOIN
-           types intervals on (intervals.id = specials.interval_id)
-        LEFT JOIN
-          types weekdays on (weekdays.id = specials.interval_desc)";
-
-        //expose($this->sSql);
-
-        //$this->sDefaultSortCol = "date";
-        //$this->sDefaultSortDir = "DESC";
-        $this->aColumns = array
-        (
-          //<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          '_edit_delete' => array
-          (
-            'display' => '',
-            //'width'=> 20,
-            'class' => 'col-md-1 center',
-            'sortable' => false,
-            'edit_onclick' => 'edit_special('.DELIMITER.'special_id'.DELIMITER.')',
-            'delete_onclick' => 'delete_special('.DELIMITER.'special_id'.DELIMITER.')',
-          ),
-          'special_id' => array
-          (
-            'display' => false,
-            'row_id' => true,
-          ),
-          'amount' => array
-          (
-            'display' => 'Price',
-            'callback' => 'money',
-          ),
-          'display' => array
-          (
-            'display' => 'Drink',
-          ),
-          'interval_name' => array
-          (
-            'display' => 'Occurrence',
-          ),
-          'interval_desc' => array
-          (
-            'display' => 'Description',
-            'callback' => 'translate_interval_desc',
-          ),
-
-        );
-
-        break;
-      case 'bar_album_view':
-
-        //expose($this->oController->aExtra['album_id']);
-
-        //if(isset($this->oController->iAlbumId))
-        //  $this->aExtra['album_id'] = $this->oController->iAlbumId;
-        $this->sTitle = 'album';
-        $this->sSchema = 'barmend';
-        $this->sNoRowsMsg = 'This album has no photos.';
-        $this->sSql = "
-        SELECT
-          images.id image_id,
-          images.ord,
-          images.title,
-          images.description
-        FROM
-          images
-        WHERE
-          images.album_id = ".(int)$this->aExtra['album_id']."
-        ORDER BY
-          COALESCE(images.ord, 9999),
-          images.ts";
-
-        //expose($this->sSql);
-
-        //$this->sDefaultSortCol = "date";
-        //$this->sDefaultSortDir = "DESC";
-        $this->aColumns = array
-        (
-
-          //<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          '_edit_delete' => array
-          (
-            'display' => '',
-            //'width'=> 20,
-            'class' => 'col-md-1 center',
-            'sortable' => false,
-            'edit_onclick' => 'edit_image('.DELIMITER.'image_id'.DELIMITER.')',
-            'delete_onclick' => 'delete_image('.DELIMITER.'image_id'.DELIMITER.')',
-          ),
-          'ord' => array
-          (
-            'display' => 'Order',
-            'sortable' => false,
-            'class' => 'col-md-1 center',
-          ),
-          'image_id' => array
-          (
-            'display' => 'Photo',
-            'row_id' => true,
-            'left_html' => '<img src="'.BASE_URL.'/image/view/',
-            'right_html' => '/mdt/" style="border: 2px solid white; height: 80px; width: 80px;">',
-            'sortable' => false,
-            'class' => 'col-md-1 center',
-          ),
-          //'image' => array
-         // (
-         //   'display' => 'Photo',
-         //   //'callback' => 'money',
-         // ),
-
-          'title' => array
-          (
-            'display' => 'Title',
-            'sortable' => false,
-          ),
-        );
-
-        break;
     }
 
     $this->oDb = new Db($this->sSchema);
-
-
   }
 
   function set_html()
   {
-    //pr('set_html()');
-    //die();
     $this->set_body_html();
     $this->set_footer_html();
     $this->sHtml =  '
@@ -988,8 +658,6 @@ class Reporter
       <div id="'.$this->sContainerId.'_body" class="body">'.$this->sBodyHtml.'</div>
       <div id="'.$this->sContainerId.'_footer" class="footer">'.$this->sFooterHtml.'</div>
     </div>';
-
-    //expose($this->sHtml);
   }
 
   function set_header_html()
@@ -999,24 +667,8 @@ class Reporter
 
   function set_body_html()
   {
-    //pr('set_body_html()');
-    //print 'run()';
-    //$this->set_sql();
-    //$aRows = Db::select_rows($this->sSql, $this->sSchema);
-
-    //expose($this->sSchema);
-
-    //if($this->sSchema == 'iamjacksjourney')
-    //  $sEnv = 'prod';
-    //else
-    //  $sEnv = DB_ENV;
-    //expose($this->sSql);
-
     $aRows = $this->oDb->select_rows_and_count($this->sSql);//, $this->sSchema, $sEnv);
-    //line();
     $this->set_totals($aRows['count']);
-
-    //expose($aRows['count']);
 
     if(!$aRows['count'])
     {
@@ -1060,18 +712,11 @@ class Reporter
     }
     $sTable.'</tr>';
 
-    //expose($aRows);
-    //stop();
-
-    //pr($this->sReport);
-
     foreach($aRows as $aRow)
     {
       $sTable.= '<tr>';
       foreach($this->aColumns as $sKey => $aColumn)
       {
-        //pr($sKey);
-        //expose($aColumn);
         if($aColumn['display'] !== false)
         {
           $sClass = @Util::coalesce($aColumn['class'], 'col-md-3');
@@ -1142,10 +787,6 @@ class Reporter
     if($this->iPage == $this->iTotalPages)
       $sNextClass = 'disabled';
 
-    //$this->iTotalPages = $iTotalRows;
-
-    //expose($sPrevClass);
-
     $sNav = '
         <ul class="pagination pull-right">
       <li class="clickable"><span onclick="run_report(\''.$this->sReport.'\');" class="glyphicon glyphicon-refresh"></span></li>
@@ -1167,59 +808,15 @@ class Reporter
     $this->sBodyHtml = $sTable.$sNav;
   }
 
-  private function get_special_col_val($sType, $aColumn, $aRow, $sGlyph = null)
-  {
-    //pr('get_special_col_val('.$sType.')');
-    //line();
-    switch($sType)
-    {
-      case 'edit':
-        $sGlyph = @Util::coalesce($sGlyph,'pencil');
-        $aColumn['onclick'] = @Util::coalesce($aColumn['edit_onclick'], $aColumn['onclick']);
-        break;
-      case 'delete':
-        $sGlyph = @Util::coalesce($sGlyph,'remove');
-        $aColumn['onclick'] = @Util::coalesce($aColumn['delete_onclick'], $aColumn['onclick']);
-        break;
-    }
-    //line();
-    $sOnclick = '';
-    if(isset($aColumn['onclick']))
-    {
-      if(strpos($aColumn['onclick'], DELIMITER))
-      {
-        ///pr('onlick has a delimiter');
-        //$aColumn['onclick'] = 'edit_special(MMMspecial_idMMM)';
-        //expose($aColumn['onclick']);
-        //expose(DELIMITER);
-        $iFirstOccurrence = strpos($aColumn['onclick'], DELIMITER);
-        $iLastOccurrence = strrpos($aColumn['onclick'], DELIMITER);
-
-        $sReplace = substr($aColumn['onclick'], $iFirstOccurrence + DELIMITER_LENGTH, ($iLastOccurrence - $iFirstOccurrence - DELIMITER_LENGTH));
-
-        //expose($sReplace);
-        $aColumn['onclick'] = str_replace(DELIMITER.$sReplace.DELIMITER, $aRow[$sReplace], $aColumn['onclick']);
-        //expose($aColumn['onclick']);
-        //stop();
-      }
-      //line();
-      $sOnclick = 'onclick="'.$aColumn['onclick'].'"';
-    }
-
-    //line();
-
-    return '<span class="glyphicon glyphicon-'.$sGlyph.' clickable" aria-hidden="true" '.$sOnclick.'></span>';
-  }
+ 
 
   function set_footer_html()
   {
-
     $this->sFooterHtml = '';
   }
 
   private function _date($sVal, $aRow)
   {
-    //pr('_date()');
     if(!empty($sVal))
       return date(DATE_FORMAT_SHORT, Util::strtotime($sVal));
   }
@@ -1232,7 +829,6 @@ class Reporter
 
   private function _date_time($sVal, $aRow)
   {
-    //pr('_date()');
     if(!empty($sVal))
       return date(DATE_FORMAT_SHORT.' '.TIME_FORMAT_SHORT, Util::strtotime($sVal));
   }
@@ -1255,7 +851,6 @@ class Reporter
 
   private function _translate_interval_desc($sVal, $aRow)
   {
-    //pr('_translate_interval_desc()');
     switch($aRow['interval_id'])
     {
       case TYPE_INTERVAL_WEEKLY:
@@ -1269,9 +864,6 @@ class Reporter
         return $aRow['interval_desc'];
         break;
     }
-
-
-    //return //date(DATE_FORMAT_SHORT, strtotime($sVal));
   }
 
   public function set_limit($iLimit)
@@ -1281,65 +873,43 @@ class Reporter
 
   public function set_sort($sSortCol = null, $sSortDir)
   {
-    //pr('set_sort('.$sSortCol.','.$sSortDir.')');
     $sSortDir = Util::coalesce($sSortDir, 'ASC');
-    //expose($sSortDir);
     if(isset($sSortCol))
     {
-      //line();
       $this->sSortCol = $sSortCol;
       $this->sSortDir = $sSortDir;
-
-      //expose($this->sSortCol);
-      //expose($this->sSortDir);
     }
     elseif(isset($this->sDefaultSortCol))
     {
-      //line();
       $this->sSortCol = $this->sDefaultSortCol;
-      //line();
       $this->sSortDir = @Util::coalesce($this->sDefaultSortDir, $sSortDir);
-      //line();
     }
     else
     {
       $this->sSortCol = $this->sSortDir = null;
     }
-    //line();
   }
 
   public function set_totals($iTotalRows)
   {
     $this->iTotalRows = $iTotalRows;
     $this->iTotalPages = ceil($iTotalRows / $this->iLimit);
-    //expose($this->iTotalPages);
   }
 
   public function set_sql()
   {
     $iOffset = ($this->iPage - 1) * $this->iLimit;
-    //$this->sSql = str_replace("SELECT", "SELECT SQL_CALC_FOUND_ROWS", $this->sSql);
     if(isset($this->sSortCol, $this->sSortDir))
     {
-      //line();
       $this->sSql.= " ORDER BY ".$this->sSortCol." ".$this->sSortDir;
     }
-    //else
-      //line();
     $this->sSql.=" LIMIT ".$iOffset.', '.$this->iLimit;
-    //expose($this->sSql);
   }
 
   public function run_report()
   {
-    //pr('run_report()');
     // cant remember what sExtra wsa for
     Controller::add_footer_js("init_report('".$this->sReport."', {iPage: ".$this->iPage.", iLimit: ".$this->iLimit.", sExtra: '".json_encode($this->aExtra)."'})");
-    //Controller::add_footer_js("init_report('".$this->sReport."', {iPage: ".$this->iPage.", iLimit: ".$this->iLimit."})");
     Controller::add_footer_js("run_report('".$this->sReport."')");
   }
 }
-
-
-
-

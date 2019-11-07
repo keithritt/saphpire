@@ -31,9 +31,6 @@ elseif(strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/6.0'))
 elseif(strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0'))
     $sHtml.= '<meta http-equiv="X-UA-Compatible" content="IE=11"/>';
 
-    //<meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-
-
 $sHtml.= '<meta charset="utf-8" />';
 $sHtml.= '<meta name="viewport" content="width=device-width, initial-scale=1" />';
 

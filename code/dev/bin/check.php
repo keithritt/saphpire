@@ -1,7 +1,7 @@
 <?
 $sDir = $argv[1];
 define(DIR, $sDir);
-$sCodeEnv = explode('/', str_replace('/home3/oloop/public_html/', '', __file__));
+$sCodeEnv = explode('/', str_replace('/public_html/', '', __file__));
 $sCodeEnv = $sCodeEnv[0];
 
 set_time_limit(0);

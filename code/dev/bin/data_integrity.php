@@ -25,9 +25,7 @@ foreach($aNonNulls as $sSchema => $aSchemaData)
     foreach($aTableData as $sColumn => $aColumnData)
     {
       $sSql = "SELECT COUNT(*) count FROM $sTable WHERE $sColumn IS NULL OR $sColumn = ''";
-      //expose($sSql);
       $aRow = Db::select_row($sSql, $sSchema);
-      //expose($aRow);
       if($aRow['count'])
       {
         Log::error($aRow['count'].' null values found in $sSchema.$sTable.$sColumn');
@@ -65,8 +63,6 @@ foreach($aUniques as $sSchema => $aSchemaData)
     foreach($aTableData as $sColumn => $aColumnData)
     {
       $sSql = "SELECT $sColumn, COUNT(*) COUNT FROM $sTable GROUP BY $sColumn HAVING COUNT > 1";
-      expose($sSql);
-      //die();
       $aRows = Db::select_rows($sSql, $sSchema);
       
       switch($aColumnData['action'])
@@ -84,8 +80,7 @@ foreach($aUniques as $sSchema => $aSchemaData)
             Db::delete($sSql, $sSchema);
           }
           break;
-      }
-        
+      }        
     }
   }
 }

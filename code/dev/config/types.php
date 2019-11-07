@@ -5,24 +5,9 @@ define('TYPE_YES_NO_YES', 101);
 define('TYPE_YES_NO_NO', 102);
 
 define('PARENT_TYPE_ENTITY', 200);
-define('TYPE_ENTITY_BAR', 201);
 
-define('PARENT_TYPE_EMPLOYER', 300);
-define('TYPE_EMPLOYER_BAR', 301);
-define('TYPE_EMPLOYER_SITE', 302);
-
-define('PARENT_TYPE_MENU', 400);
-define('TYPE_MENU_FOOD', 401);
-define('TYPE_MENU_DRINK', 402);
 
 define('PARENT_TYPE_CUSTOM_CONTENT', 500);
-define('TYPE_CUSTOM_CONTENT_BEER_DU_JOUR', 501);
-define('TYPE_CUSTOM_CONTENT_POTW', 502);
-define('TYPE_CUSTOM_CONTENT_HOMEPAGE_MSG', 503);
-
-define('PARENT_TYPE_AUDIT', 600);
-define('TYPE_AUDIT_BARMEND_CUSTOM_CONTENT', 601);
-define('TYPE_AUDIT_BARMEND_MENU_ITEMS', 602);
 
 //@TODO - should these be divided into separate statuses?
 define('PARENT_TYPE_STATUS', 700);
@@ -35,8 +20,6 @@ define('TYPE_STATUS_NEW', 705);
 define('PARENT_TYPE_PREFERENCES', 800);
 define('TYPE_PREFERENCE_CALENDAR', 801);
 define('TYPE_PREFERENCE_SPECIALS', 802);
-define('TYPE_PREFERENCE_BEER_DU_JOUR', 803);
-define('TYPE_PREFERENCE_POTW', 804);
 define('TYPE_PREFERENCE_FACEBOOK', 805);
 define('TYPE_PREFERENCE_WEBSITE', 806); // for whether the bar has ability to edit its site
 define('TYPE_PREFERENCE_DOMAIN', 807); // perhaps this should be an attribute

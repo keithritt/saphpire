@@ -1,6 +1,3 @@
-
-
-
 <div class="container">
   <?
     if(isset($sGoodMsg))
@@ -11,6 +8,4 @@
     if(isset($sContent))
         print $sContent;
   ?>
-
-
 </div>

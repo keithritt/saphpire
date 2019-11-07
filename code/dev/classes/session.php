@@ -187,7 +187,6 @@ class Session
 
 	public static function set_flashdata($sLookup, $vVal)
 	{
-
 		$_SESSION['aFlashData'][$sLookup] = $vVal;
 	}
 

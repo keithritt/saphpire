@@ -38,8 +38,6 @@ class Form
 
 	public static function get_dropdown($aParams)
 	{
-		//pr('get_dropdown()');
-		//expose($aParams);
 		$sName = $aParams['name'];
 		$sId = @Util::coalesce($aParams['id'], $sName);
 		$vDefault = @Util::coalesce($aParams['default'], null);
@@ -150,31 +148,9 @@ class Form
 
   public static function get_date_picker($aOptions = array())
   {
-    //pr('get_date_picker()');
-    //expose($aOptions);
-    // not sure if i like this method yet
-    //global $oThis;
-    //pr('get_data_picker()');
     $sId = @Util::coalesce($aOptions['id'], 'picker_'.uniqid());
-    //expose($sId);
     $sName = @Util::coalesce($aOptions['name'], $sId);
     $sDate = @Util::coalesce($aOptions['date'], date('n/j/Y'));
-
-    //$oThis->sId = $sId;
-    //$oThis->sDate = $sDate;
-    //expose($sDate);
-    //die();
-    //$sMonthStart = str_replace('/', '/1/', $sMonth); // inject a 1 for strtotime() lookups
-    //$aCalendar = get_calendar_array(array('month' => $sMonth));
-    //glyphicon glyphicon-calendar
-
-    /*
-                            <span class="btn-group">
-                                <a class="btn"><i class="icon-chevron-left"></i></a>
-                              <a class="btn active">'.date('F Y', strtotime($sMonthStart)).'</a>
-                              <a class="btn"><i class="icon-chevron-right"></i></a>
-                            </span>
-    */
 
     $aMonths = array();
     $aMonths[1] = array('name' => 'January', 'abbr' => 'Jan');
@@ -259,22 +235,11 @@ class Form
 
   public static function get_date_picker_old($aOptions = array())
   {
-    //pr('get_data_picker()');
     $sId = @Util::coalesce($aOptions['id'], 'picker_'.uniqid());
     $sName = @Util::coalesce($aOptions['name'], $sId);
     $sMonth = @Util::coalesce($aOptions['month'], date('n/Y'));
     $sMonthStart = str_replace('/', '/1/', $sMonth); // inject a 1 for strtotime() lookups
     $aCalendar = get_calendar_array(array('month' => $sMonth));
-    //glyphicon glyphicon-calendar
-
-    /*
-                            <span class="btn-group">
-                                <a class="btn"><i class="icon-chevron-left"></i></a>
-                              <a class="btn active">'.date('F Y', strtotime($sMonthStart)).'</a>
-                              <a class="btn"><i class="icon-chevron-right"></i></a>
-                            </span>
-    */
-
 		$aMonths = array();
 		$aMonths[1] = array('name' => 'January', 'abbr' => 'Jan');
 		$aMonths[2] = array('name' => 'February', 'abbr' => 'Feb');

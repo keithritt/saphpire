@@ -5,8 +5,6 @@ $aHtml = array();
 if(isset($this->sTitle))
   $aHtml[] = $this->sTitle;
 
-//if(isset($sTable))
-//  print $sTable;
 
 $aHtml[] =  '<div id="report_container" style="margin: auto;"></div>';
 

@@ -2,7 +2,6 @@
 
 class Perm
 {
-
 	public static $bChecked = false;
 	public static $bRequireLogin = true;
 
@@ -18,34 +17,24 @@ class Perm
 	// if true - used to detmine if page renders at all
 	public static function check($iPermission, $bMajor = false, $iMemberId = null)
 	{
-		//pr('Perm->check('.$iPermission.')');
 		if($bMajor)
 			self::$bChecked = true;
 
 		if($iPermission == self::_PUBLIC)
 			return true;
 
-		//pr('check('.$iPermission.', '.$iMemberId.')');
 		if(is_null($iMemberId)) // just base it on the session data
 		{
 			$aPerms = Session::get('login||member_data');
-			//expose($aPerms);
 			$aPerms = current($aPerms);
-			//expose($aPerms);
 			$aPerms = $aPerms['permissions'];
-			//expose($aPerms);
 		}
 
 		return in_array($iPermission, $aPerms);
-
-		//expose($aPerms);
 	}
-
-
 
 	public static function ignore()
 	{
-		//pr();
 		self::$bRequireLogin = false; // not sure how i feel about this
 		self::$bChecked = true;
 	}

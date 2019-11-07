@@ -6,7 +6,7 @@ class Request
   public static $iPageViewId;
   public static $iCodeLevel = 1;
   public static $iDomainId = null;
-  public static $iBuildId = 7;
+  public static $iBuildId = 1;
 
   public static function init()
   {

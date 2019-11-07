@@ -1,9 +1,5 @@
 <?
 
-//pr('modal.php');
-
-//expose($this->aTemplateData);
-
 $sModalId = @Util::coalesce($sTemplateId, $this->sModalId, 'modal');
 
 $sTitle = @Util::coalesce($this->aTemplateData[$sTemplateId]['title'], $this->sModalTitle, '');
@@ -13,8 +9,6 @@ $sUpdateMsgId = $sModalId.'_updt_msg';
 $sBody = @Util::coalesce($this->aTemplateData[$sTemplateId]['body'], $this->sModalBody, '');
 $sFooter = @Util::coalesce($this->aTemplateData[$sTemplateId]['footer'], $this->sModalBody, '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
 $sModalClass = @Util::coalesce($this->aTemplateData[$sTemplateId]['modal_class'], '');
-
-//expose($sTemplateId);
 
 $aHtml = array();
 
